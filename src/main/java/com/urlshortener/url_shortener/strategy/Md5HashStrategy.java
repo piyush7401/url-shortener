@@ -1,7 +1,9 @@
 package com.urlshortener.url_shortener.strategy;
+import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 
+@Component
 public class Md5HashStrategy implements IdGenerationStrategy {
     @Override
     public String convertLongShort(String longUrl) {

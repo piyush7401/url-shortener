@@ -1,9 +1,11 @@
 package com.urlshortener.url_shortener.repository;
 
 import com.urlshortener.url_shortener.model.UrlMapping;
+import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class InMemoryUrlRepository implements UrlRepository {
 
     private ConcurrentHashMap<String, UrlMapping> map = new ConcurrentHashMap<>();

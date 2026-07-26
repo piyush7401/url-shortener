@@ -7,9 +7,11 @@ import com.urlshortener.url_shortener.exception.UrlNotFoundException;
 import com.urlshortener.url_shortener.model.UrlMapping;
 import com.urlshortener.url_shortener.repository.UrlRepository;
 import com.urlshortener.url_shortener.strategy.IdGenerationStrategy;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-//chnages
+
+@Service
 public class UrlShortenerService {
     private UrlRepository urlRepository;
     private IdGenerationStrategy idGenerationStrategy;

@@ -1,7 +1,8 @@
     package com.urlshortener.url_shortener.strategy;
-
+    import org.springframework.stereotype.Component;
     import java.util.Random;
 
+    @Component
     public class Base62RandomStrategy implements IdGenerationStrategy {
         private static final String sb = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private static final Random rand = new Random();
