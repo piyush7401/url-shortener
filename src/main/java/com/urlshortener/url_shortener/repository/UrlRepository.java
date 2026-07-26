@@ -7,4 +7,5 @@ public interface UrlRepository {
     UrlMapping getLongURL(String shortUrl);
     boolean checkShortUrlExist(String shortUrl);
     boolean checkLongUrlExist(String longUrl);
+    String getShortUrl(String longUrl);
 }

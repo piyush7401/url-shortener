@@ -40,4 +40,9 @@ public class InMemoryUrlRepository implements UrlRepository {
         }
         return false;
     }
+
+    @Override
+    public String getShortUrl(String longUrl) {
+        return longUrlDuplicate.get(longUrl).getShortUrl();
+    }
 }
