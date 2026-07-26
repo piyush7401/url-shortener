@@ -2,6 +2,8 @@ package com.urlshortener.url_shortener.service;
 
 import com.urlshortener.url_shortener.exception.AliasAlreadyExistsException;
 import com.urlshortener.url_shortener.exception.ShortCodeGenerationException;
+import com.urlshortener.url_shortener.exception.UrlExpiredException;
+import com.urlshortener.url_shortener.exception.UrlNotFoundException;
 import com.urlshortener.url_shortener.model.UrlMapping;
 import com.urlshortener.url_shortener.repository.UrlRepository;
 import com.urlshortener.url_shortener.strategy.IdGenerationStrategy;
@@ -48,6 +50,19 @@ public class UrlShortenerService {
             urlRepository.saveToDB(map);
             return alias;
         }
+    }
+
+    public UrlMapping resolve(String shortUrl){
+        UrlMapping map = urlRepository.getLongURL(shortUrl);
+        if(map == null){
+            throw new UrlNotFoundException("Url Not Found");
+        }
+        if(map.isExpired()){
+            throw new UrlExpiredException("Url Expired");
+        }
+        long clicks = map.getClickCount()+ 1;
+        map.setClickCount(clicks);
+        return map;
     }
 
 }
