@@ -17,4 +17,8 @@
 
             return shortUrl.toString();
         }
+        @Override
+        public StrategyType getStrategyType() {
+            return StrategyType.BASE62;
+        }
     }

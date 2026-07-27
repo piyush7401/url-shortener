@@ -23,4 +23,9 @@ public class Md5HashStrategy implements IdGenerationStrategy {
             throw new RuntimeException("Error generating MD5 Hash", e);
         }
     }
+
+    @Override
+    public StrategyType getStrategyType() {
+        return StrategyType.MD5;
+    }
 }
