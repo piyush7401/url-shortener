@@ -6,43 +6,44 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryUrlRepository implements UrlRepository {
 
-    private ConcurrentHashMap<String, UrlMapping> map = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, UrlMapping> longUrlDuplicate = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, UrlMapping> shortUrlToMapping = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, UrlMapping> longUrlToMapping = new ConcurrentHashMap<>();
+
     @Override
-    public void saveToDB(UrlMapping mapping){
+    public void save(UrlMapping mapping){
         String shortUrl = mapping.getShortUrl();
         String longUrl = mapping.getLongUrl();
-        map.put(shortUrl, mapping);
-        longUrlDuplicate.put(longUrl, mapping);
+        shortUrlToMapping.put(shortUrl, mapping);
+        longUrlToMapping.put(longUrl, mapping);
     }
 
     @Override
-    public UrlMapping getLongURL(String shortUrl) {
-        return map.get(shortUrl);
+    public UrlMapping findByShortUrl(String shortUrl) {
+        return shortUrlToMapping.get(shortUrl);
     }
 
     @Override
-    public boolean checkShortUrlExist(String shortUrl) {
-        if(map.containsKey(shortUrl)){
-            return true;
+    public UrlMapping findByLongUrl(String longUrl) {
+        return longUrlToMapping.get(longUrl);
+    }
+
+    @Override
+    public boolean existsByShortUrl(String shortUrl) {
+        return shortUrlToMapping.containsKey(shortUrl);
+    }
+
+    @Override
+    public boolean existsByLongUrl(String longUrl) {
+        UrlMapping mapping = longUrlToMapping.get(longUrl);
+        return mapping != null && !mapping.isExpired();
+    }
+
+    @Override
+    public void deleteByShortUrl(String shortUrl) {
+        UrlMapping mapping = shortUrlToMapping.remove(shortUrl);
+
+        if (mapping != null) {
+            longUrlToMapping.remove(mapping.getLongUrl());
         }
-        return false;
-    }
-
-    @Override
-    public boolean checkLongUrlExist(String longUrl) {
-        if(longUrlDuplicate.containsKey(longUrl)){
-            UrlMapping mapping = longUrlDuplicate.get(longUrl);
-            if(mapping.isExpired()){
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public String getShortUrl(String longUrl) {
-        return longUrlDuplicate.get(longUrl).getShortUrl();
     }
 }

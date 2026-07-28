@@ -53,6 +53,7 @@ public class UrlMapping {
         this.createdAt = createdAt;
         this.expiryAt = expiryAt;
         this.customAlias = customAlias;
+        clickCount = 0;
     }
     public boolean isExpired(){
         if(this.expiryAt == null){
@@ -63,5 +64,10 @@ public class UrlMapping {
         }
         return false;
     }
+
+    public void incrementClickCount() {
+        this.clickCount++;
+    }
+
 
 }
