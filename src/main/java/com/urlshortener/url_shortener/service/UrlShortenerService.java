@@ -7,6 +7,8 @@ import com.urlshortener.url_shortener.exception.UrlNotFoundException;
 import com.urlshortener.url_shortener.model.UrlMapping;
 import com.urlshortener.url_shortener.repository.UrlRepository;
 import com.urlshortener.url_shortener.strategy.IdGenerationStrategy;
+import com.urlshortener.url_shortener.strategy.IdGeneratorFactory;
+import com.urlshortener.url_shortener.strategy.StrategyType;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,20 +16,27 @@ import java.time.LocalDateTime;
 @Service
 public class UrlShortenerService {
     private UrlRepository urlRepository;
-    private IdGenerationStrategy idGenerationStrategy;
+    private IdGeneratorFactory idGeneratorFactory;
 
-    public UrlShortenerService(UrlRepository urlRepository, IdGenerationStrategy idGenerationStrategy) {
+    public UrlShortenerService(UrlRepository urlRepository,IdGeneratorFactory idGeneratorFactory ) {
         this.urlRepository = urlRepository;
-        this.idGenerationStrategy = idGenerationStrategy;
+        this.idGeneratorFactory = idGeneratorFactory;
     }
 
-    public String shortenUrl(String longUrl, String alias){
+    public String shortenUrl(String longUrl, String alias, StrategyType strategyType) {
         if(urlRepository.checkLongUrlExist(longUrl)){
             return urlRepository.getShortUrl(longUrl);
         }
         if(alias == null){
+            IdGenerationStrategy strategy;
+            if(strategyType == null){
+                strategy = idGeneratorFactory.getIdGenerator(StrategyType.BASE62);
+            }
+            else{
+                strategy = idGeneratorFactory.getIdGenerator(strategyType);
+            }
             for(int i =0;i<5;i++){
-                String shortUrl = idGenerationStrategy.convertLongShort(longUrl);
+                String shortUrl = strategy.convertLongShort(longUrl);
                 if(urlRepository.checkShortUrlExist(shortUrl) == false){
                     LocalDateTime createdAt = LocalDateTime.now();
                     LocalDateTime expiryAt = createdAt.plusDays(10);
