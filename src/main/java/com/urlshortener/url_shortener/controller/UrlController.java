@@ -1,5 +1,6 @@
 package com.urlshortener.url_shortener.controller;
 
+import com.urlshortener.url_shortener.dto.ShortenUrlRequest;
 import com.urlshortener.url_shortener.model.UrlMapping;
 import com.urlshortener.url_shortener.service.UrlShortenerService;
 import com.urlshortener.url_shortener.strategy.StrategyType;
@@ -16,8 +17,8 @@ public class UrlController {
     private UrlShortenerService urlShortenerService;
 
     @PostMapping("/short")
-    public String shortenUrl(@RequestParam String longurl, @RequestParam(required = false) String alias, @RequestParam(required = false) StrategyType strategy) {
-        return urlShortenerService.shortenUrl(longurl,alias,strategy);
+    public String shortenUrl(@RequestBody ShortenUrlRequest shortenUrlRequest) {
+        return urlShortenerService.shortenUrl(shortenUrlRequest.getLongUrl(), shortenUrlRequest.getAlias(), shortenUrlRequest.getStrategy());
     }
 
     @GetMapping("/{shortUrl}")
